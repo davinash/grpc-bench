@@ -1,0 +1,34 @@
+syntax = "proto3"; // This should be the first line always.
+
+option java_multiple_files = true;
+// java_package (file option): The package you want to use for your generated Java classes.
+// If no explicit java_package option is given in the .proto file, then by default the proto package
+// (specified using the "package" keyword in the .proto file) will be used. However, proto packages generally
+// do not make good Java packages since proto packages are not expected to start with reverse domain names.
+// If not generating Java code, this option has no effect.
+option java_package = "io.ampool.generated";
+// objc_class_prefix (file option): Sets the Objective-C class prefix which is prepended to all Objective-C generated
+// classes and enums from this .proto. There is no default. You should use prefixes that are between 3-5
+// uppercase characters as recommended by Apple. Note that all 2 letter prefixes are reserved by Apple.
+option objc_class_prefix = "AMP";
+
+option optimize_for = SPEED;
+
+message ScanRequest {
+
+}
+
+message ScanRawResponse {
+
+}
+
+message ScanFormattedResponse {
+
+}
+
+service ScanService {
+    rpc rawScan (ScanRequest) returns (stream ScanRawResponse) {
+    }
+    rpc formatedScan (ScanRequest) returns (stream ScanFormattedResponse) {
+    }
+}
