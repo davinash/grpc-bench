@@ -6,7 +6,7 @@ option java_multiple_files = true;
 // (specified using the "package" keyword in the .proto file) will be used. However, proto packages generally
 // do not make good Java packages since proto packages are not expected to start with reverse domain names.
 // If not generating Java code, this option has no effect.
-option java_package = "io.ampool.generated";
+option java_package = "io.adongre.grpc.generated";
 // objc_class_prefix (file option): Sets the Objective-C class prefix which is prepended to all Objective-C generated
 // classes and enums from this .proto. There is no default. You should use prefixes that are between 3-5
 // uppercase characters as recommended by Apple. Note that all 2 letter prefixes are reserved by Apple.
@@ -14,16 +14,29 @@ option objc_class_prefix = "AMP";
 
 option optimize_for = SPEED;
 
-message ScanRequest {
-
+message ScanRawRow {
+    bytes row = 2;
 }
-
 message ScanRawResponse {
-
+    repeated ScanRawRow row = 1;
+}
+message ScanRequest {
+    int32 numOfColumns = 1;
+    int32 sizeOfEachColumn = 2;
+    int64 numOfRows = 3;
 }
 
+message ColumnValues {
+    bytes columnName = 1;
+    bytes columnValue = 2;
+}
+message ScanFormattedRow {
+    int64 rowId = 1;
+    int64 timeStamp = 2;
+    repeated ColumnValues columnValue = 3;
+}
 message ScanFormattedResponse {
-
+    repeated ScanFormattedRow row = 1;
 }
 
 service ScanService {
