@@ -20,10 +20,12 @@ message ScanRawRow {
 message ScanRawResponse {
     repeated ScanRawRow row = 1;
 }
+
 message ScanRequest {
     int32 numOfColumns = 1;
     int32 sizeOfEachColumn = 2;
     int64 numOfRows = 3;
+    int32 batchSize = 4;
 }
 
 message ColumnValues {

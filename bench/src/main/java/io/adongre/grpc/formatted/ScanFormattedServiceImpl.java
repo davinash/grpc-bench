@@ -11,8 +11,6 @@ import java.nio.ByteBuffer;
  * Created by adongre on 9/29/16.
  */
 public class ScanFormattedServiceImpl extends io.adongre.grpc.generated.ScanServiceGrpc.ScanServiceImplBase {
-
-
   @Override
   public void formatedScan(ScanRequest request, StreamObserver<ScanFormattedResponse> responseObserver) {
 
@@ -23,6 +21,7 @@ public class ScanFormattedServiceImpl extends io.adongre.grpc.generated.ScanServ
     try {
       int numOfColumns = request.getNumOfColumns();
       int columnSize = request.getSizeOfEachColumn();
+      int batchSize = request.getBatchSize();
       byte[] data = new byte[columnSize];
 
       final ServerCallStreamObserver<ScanFormattedResponse> scso =
@@ -43,15 +42,22 @@ public class ScanFormattedServiceImpl extends io.adongre.grpc.generated.ScanServ
               scanFormattedRowBuilder.addColumnValue(columnValueBuilder.build());
               columnValueBuilder.clear();
             }
-
             scanFormattedRowBuilder.setRowId(remaining);
             scanFormattedRowBuilder.setTimeStamp(System.nanoTime());
 
             scanFormattedResponseBuilder.addRow(scanFormattedRowBuilder.build());
             scanFormattedRowBuilder.clear();
+            if ( scanFormattedResponseBuilder.getRowList().size() % batchSize == 0 ) {
+              scso.onNext(scanFormattedResponseBuilder.build());
+              scanFormattedResponseBuilder.clear();
+            }
+          }
+
+          if ( scanFormattedResponseBuilder.getRowList().size() % batchSize == 0 ) {
             scso.onNext(scanFormattedResponseBuilder.build());
             scanFormattedResponseBuilder.clear();
           }
+
           if (remaining == 0) {
             scso.onCompleted();
           }

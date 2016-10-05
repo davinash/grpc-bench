@@ -21,7 +21,7 @@ public class ScanRawServer {
         .channelType(NioServerSocketChannel.class)
         .build()
         .start();
-    System.out.println("Server started, listening on " + port);
+    System.out.println("BenchmarkServer started, listening on " + port);
     Runtime.getRuntime().addShutdownHook(new Thread() {
       @Override
       public void run() {
