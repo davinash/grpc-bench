@@ -15,8 +15,9 @@ import java.util.concurrent.TimeUnit;
 public class ScanFormattedClient {
   private void scanExecute() throws InterruptedException {
     final int NUMBER_OF_COLUMNS = 6;
-    final long NUM_OF_ROWS = 2_000_000L;
+    final long NUM_OF_ROWS = Long.getLong("num.rows",2_000_000L);
     final int SIZE_OF_EACH_COLUMN = 32;
+    final int BATCH_SIZE = Integer.getInteger("batch.size", 100);
     ManagedChannel channel = null;
 
     final int CLIENT_BLOCKING = 1;
@@ -47,6 +48,7 @@ public class ScanFormattedClient {
           asyncStub.formatedScan(ScanRequest.newBuilder()
               .setNumOfColumns(NUMBER_OF_COLUMNS)
               .setNumOfRows(NUM_OF_ROWS)
+              .setBatchSize(BATCH_SIZE)
               .setSizeOfEachColumn(SIZE_OF_EACH_COLUMN)
               .build(), new StreamObserver<ScanFormattedResponse>() {
             @Override
@@ -98,6 +100,7 @@ public class ScanFormattedClient {
               blockingStub.formatedScan(ScanRequest.newBuilder()
                   .setNumOfColumns(NUMBER_OF_COLUMNS)
                   .setNumOfRows(NUM_OF_ROWS)
+                  .setBatchSize(BATCH_SIZE)
                   .setSizeOfEachColumn(SIZE_OF_EACH_COLUMN)
                   .build());
 

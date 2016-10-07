@@ -48,7 +48,9 @@ public class ScanFormattedServiceImpl extends io.adongre.grpc.generated.ScanServ
             scanFormattedResponseBuilder.addRow(scanFormattedRowBuilder.build());
             scanFormattedRowBuilder.clear();
             if ( scanFormattedResponseBuilder.getRowList().size() % batchSize == 0 ) {
-              scso.onNext(scanFormattedResponseBuilder.build());
+              ScanFormattedResponse scanFormattedResponse = scanFormattedResponseBuilder.build();
+//              System.out.println("ScanFormattedServiceImpl.Size -> " + scanFormattedResponse.getSerializedSize());
+              scso.onNext(scanFormattedResponse);
               scanFormattedResponseBuilder.clear();
             }
           }
